@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How this was built — NUFORC UFO Sightings</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap">
+      <h1>How this was built</h1>
+      <p class="subtitle">
+        The engineering behind the dashboard — how a sighting report gets from
+        NUFORC's website onto this page.
+      </p>
+    </div>
+  </header>
+
+  <nav class="site-nav">
+    <div class="wrap">
+      <a href="index.html">Dashboard</a>
+      <a href="pipeline.html" class="active">How this was built</a>
+    </div>
+  </nav>
+
+  <main class="wrap">
+
+    <!-- DRAFT: written from my own changelog/code-review notes on this project.
+         Rewrite freely into your own voice before this goes live -- treat every
+         line here as a starting point, not a final draft. -->
+
+    <section class="card">
+      <h2>The pipeline, in three steps</h2>
+      <ol class="pipeline-steps">
+        <li>
+          <span class="step-number">1</span>
+          <h3>Scrape</h3>
+          <p>
+            A Selenium script drives a real Chrome browser through NUFORC's
+            paginated public sighting index, page by page, pulling every
+            report into a table.
+          </p>
+        </li>
+        <li>
+          <span class="step-number">2</span>
+          <h3>Clean</h3>
+          <p>
+            Dates get parsed and validated, obviously mistyped entries
+            (a sighting "year" of 1400, for instance) get filtered out, and
+            geographic fields get normalized.
+          </p>
+        </li>
+        <li>
+          <span class="step-number">3</span>
+          <h3>Store &amp; publish</h3>
+          <p>
+            Everything is written to a Postgres database. A separate export
+            script then aggregates it down into the small JSON files this
+            site actually reads — the public page never connects to the
+            database directly.
+          </p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2>Problems solved along the way</h2>
+
+      <div class="challenge">
+        <h3>Getting past Cloudflare's bot detection</h3>
+        <p>
+          <strong>Problem:</strong> NUFORC's site sits behind Cloudflare's bot
+          protection, which blocked a standard Selenium browser outright —
+          the scrape couldn't even get past the front page.
+        </p>
+        <p>
+          <strong>What I did:</strong> switched to
+          <code>undetected_chromedriver</code>, which strips out the
+          automation fingerprints Cloudflare checks for, and paired it with a
+          persistent browser profile so that once a verification challenge is
+          cleared by hand, that trust carries over to future runs instead of
+          re-challenging every time.
+        </p>
+        <p>
+          <strong>Why it matters:</strong> Cloudflare (or something like it)
+          sits in front of a lot of public data sources. Getting past it is
+          the difference between "the pipeline exists" and "the pipeline
+          actually runs."
+        </p>
+      </div>
+
+      <div class="challenge">
+        <h3>An environment version-mismatch cascade</h3>
+        <p>
+          <strong>Problem:</strong> Python, Chrome, and ChromeDriver don't
+          always agree with each other, and I hit that from three directions
+          in a row: Python 3.12 removed a module
+          (<code>distutils</code>) that a dependency still imported, the
+          installed Chrome version and the auto-downloaded ChromeDriver
+          version silently mismatched, and a stale cached driver kept getting
+          reused even after that mismatch was fixed.
+        </p>
+        <p>
+          <strong>What I did:</strong> wrote a small compatibility shim to
+          cover the missing module, added a helper that reads the installed
+          Chrome version straight from the Windows registry and passes it
+          through explicitly instead of trusting auto-detection, and now
+          clear the driver cache before every run.
+        </p>
+        <p>
+          <strong>Why it matters:</strong> this class of bug — the code
+          didn't change, but the environment around it did — is one of the
+          most common reasons a working script quietly stops working later.
+          The fix here generalizes well past this one project.
+        </p>
+      </div>
+
+      <div class="challenge">
+        <h3>A dependency update broke parsing overnight</h3>
+        <p>
+          <strong>Problem:</strong> a pandas version upgrade changed how it
+          accepts raw HTML for parsing. The scrape step started failing with
+          a <code>FileNotFoundError</code> — because pandas was now trying to
+          interpret the scraped HTML string as a file path.
+        </p>
+        <p>
+          <strong>What I did:</strong> wrapped the HTML string in
+          <code>io.StringIO(...)</code> before handing it to
+          <code>pandas.read_html()</code>.
+        </p>
+        <p>
+          <strong>Why it matters:</strong> a small fix, but a good example of
+          a confusing failure mode worth recognizing quickly: nothing in
+          <em>my</em> code changed, a dependency's behavior did.
+        </p>
+      </div>
+
+      <div class="challenge">
+        <h3>Moving from a CSV file to a real database, safely</h3>
+        <p>
+          <strong>Problem:</strong> the pipeline originally wrote its results
+          to a local CSV file, which doesn't support the kind of live,
+          queryable dataset this dashboard needs.
+        </p>
+        <p>
+          <strong>What I did:</strong> switched the write step to Postgres via
+          SQLAlchemy, and moved the database password out of the script
+          entirely — it's read from an environment variable at runtime
+          instead of being hardcoded.
+        </p>
+        <p>
+          <strong>Why it matters:</strong> basic credential hygiene, but the
+          kind that's easy to skip on a personal project and easy to regret
+          later.
+        </p>
+      </div>
+
+      <div class="challenge">
+        <h3>Deciding what counts as "real" data</h3>
+        <p>
+          <strong>Problem:</strong> while building the charts on this site, a
+          few dozen reports turned up with obviously mistyped years — 1400,
+          1639, 1714, and others clearly aren't real sightings from those
+          centuries.
+        </p>
+        <p>
+          <strong>What I did:</strong> rather than silently dropping them
+          <em>or</em> silently keeping them (which would stretch the yearly
+          chart across a mostly-empty 600-year range), the export script
+          filters anything before 1900 and logs exactly which years and how
+          many rows were excluded, so the decision is visible rather than
+          buried.
+        </p>
+        <p>
+          <strong>Why it matters:</strong> cleaning real-world data always
+          means making judgment calls like this one — the goal is making
+          them deliberately and leaving a trail, not pretending the data
+          arrived clean.
+        </p>
+      </div>
+    </section>
+
+    <section class="limitations">
+      <h2>What's still rough</h2>
+      <p>Built in the open, including the parts that aren't finished yet:</p>
+      <ul>
+        <li>
+          The scrape currently replaces the entire database table on every
+          run rather than appending and de-duplicating new reports. A
+          versioning helper for this exists but isn't wired in yet.
+        </li>
+        <li>
+          This dashboard is Phase 1 of the plan — it doesn't yet include
+          per-capita normalization or the geographic maps from my original
+          Tableau version of this project, since those need population and
+          space-launch data I'm still re-sourcing.
+        </li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>
+        Data from the <a href="https://nuforc.org/subndx/?id=all" target="_blank" rel="noopener">
+        National UFO Reporting Center</a>. <a href="index.html">Back to the dashboard →</a>
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>

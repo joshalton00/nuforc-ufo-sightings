@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NUFORC UFO Sightings</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Plotly.js, pinned to a specific version for stability -->
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap">
+      <h1>UFO Sightings</h1>
+      <p class="subtitle">
+        An analysis of the National UFO Reporting Center's public sighting database.
+      </p>
+    </div>
+  </header>
+
+  <nav class="site-nav">
+    <div class="wrap">
+      <a href="index.html" class="active">Dashboard</a>
+      <a href="pipeline.html">How this was built</a>
+    </div>
+  </nav>
+
+  <main class="wrap">
+
+    <section class="chart-card">
+      <h2>When do people report sightings?</h2>
+      <p class="chart-note">
+        Sighting counts by calendar day, combined across every year in the dataset.
+      </p>
+      <div id="chart-by-day" class="chart"></div>
+    </section>
+
+    <section class="chart-card">
+      <h2>Sightings by year</h2>
+      <p class="chart-note">
+        Raw report counts per year. Not adjusted for U.S. population growth yet —
+        that normalization is a planned next step.
+      </p>
+      <div id="chart-by-year" class="chart"></div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>
+        Data from the <a href="https://nuforc.org/subndx/?id=all" target="_blank" rel="noopener">
+        National UFO Reporting Center</a>, collected and cleaned by a custom scraping pipeline.
+        <!-- TODO once the repo is public on GitHub: link "custom scraping pipeline" to it. -->
+      </p>
+      <p id="generated-note" class="generated-note"></p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

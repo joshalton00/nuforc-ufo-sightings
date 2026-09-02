@@ -1,0 +1,241 @@
+/* ---------------------------------------------------------------------
+   Basic reset + page-wide settings
+   -------------------------------------------------------------------- */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #1c1e21;
+  background: #f7f7f8;
+  line-height: 1.5;
+}
+
+a {
+  color: #2f5496;
+}
+
+/* A shared max-width wrapper, reused inside the header/nav/main/footer so
+   everything lines up in one column instead of stretching edge-to-edge. */
+.wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ---------------------------------------------------------------------
+   Header + nav
+   -------------------------------------------------------------------- */
+.site-header {
+  background: #1c1e21;
+  color: #fff;
+  padding: 40px 0 28px;
+}
+
+.site-header h1 {
+  margin: 0 0 8px;
+  font-size: 2.25rem;
+}
+
+.site-header .subtitle {
+  margin: 0;
+  color: #c7c9cc;
+  font-size: 1.05rem;
+}
+
+.site-nav {
+  background: #2f5496;
+}
+
+.site-nav .wrap {
+  display: flex;
+  gap: 24px;
+}
+
+.site-nav a {
+  display: inline-block;
+  padding: 12px 0;
+  color: #dbe4f3;
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 3px solid transparent;
+}
+
+.site-nav a:hover {
+  color: #fff;
+}
+
+.site-nav a.active {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
+/* ---------------------------------------------------------------------
+   Cards -- the shared white-box style used for both the dashboard's chart
+   cards (.chart-card) and the case-study page's content cards (.card).
+   Same rules, two class names, so each page can use whichever reads more
+   sensibly in its own markup.
+   -------------------------------------------------------------------- */
+main.wrap {
+  padding-top: 32px;
+  padding-bottom: 48px;
+}
+
+.chart-card,
+.card {
+  background: #fff;
+  border: 1px solid #e2e2e4;
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.chart-card h2,
+.card h2 {
+  margin: 0 0 4px;
+  font-size: 1.3rem;
+}
+
+.card p {
+  margin: 0 0 12px;
+}
+
+.card p:last-child {
+  margin-bottom: 0;
+}
+
+.chart-note {
+  margin: 0 0 16px;
+  color: #5a5d63;
+  font-size: 0.95rem;
+}
+
+.chart {
+  width: 100%;
+  /* Plotly sizes itself to fill this box (see script.js) -- the height is
+     set here rather than in JS so the layout doesn't jump while it loads. */
+  height: 420px;
+}
+
+/* Shown in place of a chart if its data file fails to load. */
+.chart-error {
+  padding: 40px;
+  text-align: center;
+  color: #a33;
+  background: #fdf1f1;
+  border-radius: 8px;
+}
+
+/* ---------------------------------------------------------------------
+   Pipeline steps (case-study page) -- a simple 3-across row of numbered
+   steps. Wraps to a single column on narrow screens via flex-wrap.
+   -------------------------------------------------------------------- */
+.pipeline-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.pipeline-steps li {
+  flex: 1 1 220px;
+}
+
+.step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #2f5496;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+.pipeline-steps h3 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+}
+
+.pipeline-steps p {
+  margin: 0;
+  color: #5a5d63;
+  font-size: 0.92rem;
+}
+
+/* ---------------------------------------------------------------------
+   Challenge write-ups (case-study page) -- each is Problem / What I did /
+   Why it matters, so a reader can skim just the bold lead-ins.
+   -------------------------------------------------------------------- */
+.challenge + .challenge {
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 1px solid #eee;
+}
+
+.challenge h3 {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+}
+
+.challenge p {
+  margin: 0 0 8px;
+}
+
+.challenge p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------------------------------------------------------------------
+   Known-limitations callout -- deliberately styled distinctly (not as an
+   error) so it reads as "here's what's still rough, on purpose" rather
+   than a hidden defect list.
+   -------------------------------------------------------------------- */
+.limitations {
+  background: #fdf8ec;
+  border: 1px solid #f0dfa8;
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 32px;
+}
+
+.limitations h2 {
+  margin: 0 0 4px;
+  font-size: 1.3rem;
+}
+
+.limitations ul {
+  margin: 12px 0 0;
+  padding-left: 20px;
+}
+
+.limitations li {
+  margin-bottom: 8px;
+}
+
+.limitations li:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------- */
+.site-footer {
+  padding: 24px 0 40px;
+  color: #6a6d73;
+  font-size: 0.9rem;
+}
+
+.generated-note {
+  margin-top: 4px;
+  font-size: 0.8rem;
+  color: #9a9da3;
+}

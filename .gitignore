@@ -1,0 +1,11 @@
+# Cloudflare-clearance / Chrome profile data written by scrape_nuforc.py -- not something to commit
+chrome_profile/
+
+# Python bytecode cache
+__pycache__/
+
+# Leftover VS Code "Run Selection/Line" scratch file
+tempCodeRunnerFile.py
+
+# Superseded by docs/ (GitHub Pages needs root or /docs) -- kept locally, not tracked
+site/
