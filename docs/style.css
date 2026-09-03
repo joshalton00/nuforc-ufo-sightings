@@ -246,19 +246,20 @@ main.wrap {
    default look to match the rest of the page.
    -------------------------------------------------------------------- */
 .year-filter {
-  margin-bottom: 28px;
+  margin-top: 28px;
 }
 
 .year-filter-inputs {
   display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 20px;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 16px;
 }
 
 .year-filter-inputs label {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 6px;
   font-size: 0.85rem;
   color: #5a5d63;
@@ -266,10 +267,11 @@ main.wrap {
 }
 
 .year-input {
-  width: 110px;
+  width: 90px;
   padding: 6px 10px;
   font-size: 0.95rem;
   font-family: inherit;
+  text-align: center;
   color: #1c1e21;
   border: 1px solid #c7c9cc;
   border-radius: 4px;
@@ -281,8 +283,11 @@ main.wrap {
   box-shadow: 0 0 0 2px rgba(47, 84, 150, 0.15);
 }
 
+/* 75% width, centered, so the filter reads as its own compact control
+   rather than stretching the full width of the card. */
 .year-slider {
-  margin: 0 8px 8px;
+  width: 75%;
+  margin: 0 auto;
 }
 
 .year-slider.noUi-target {
@@ -296,11 +301,15 @@ main.wrap {
   background: #9a9da3;
 }
 
+/* Handle size/position: the origin noUiSlider positions handles against
+   matches this track's own height (4px, set above) -- top/right are offset
+   by exactly half the handle's own size so it lands centered on the line
+   in both directions, rather than noUiSlider's much larger 34x28 default. */
 .year-slider .noUi-handle {
-  width: 18px;
-  height: 18px;
-  right: -9px;
-  top: -8px;
+  width: 14px;
+  height: 14px;
+  right: -7px;
+  top: -5px;
   border-radius: 50%;
   background: #fff;
   border: 2px solid #5a5d63;

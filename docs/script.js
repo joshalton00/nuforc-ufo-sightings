@@ -10,7 +10,7 @@ const BASE_LAYOUT = {
   plot_bgcolor: "rgba(0,0,0,0)",
   font: { family: "-apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif", color: "#1c1e21" },
   xaxis: { gridcolor: "#eee" },
-  yaxis: { gridcolor: "#eee", zeroline: false },
+  yaxis: { gridcolor: "#eee", zeroline: false, tickformat: ",d" },
 };
 
 const BASE_CONFIG = {

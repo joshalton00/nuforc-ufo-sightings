@@ -4,9 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NUFORC UFO Sightings</title>
-  <link rel="stylesheet" href="style.css" />
-  <!-- noUiSlider, for the Tableau-style dual-handle year filter -->
+  <!-- noUiSlider, for the Tableau-style dual-handle year filter -- loaded
+       before style.css so our handle/track overrides below win ties in the
+       cascade instead of losing to noUiSlider's own defaults. -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" />
+  <link rel="stylesheet" href="style.css" />
   <!-- Plotly.js, pinned to a specific version for stability -->
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
@@ -41,10 +43,9 @@
 
     <section class="chart-card">
       <h2>Sightings by year</h2>
-      <p class="chart-note">
-        Raw report counts per year. Not adjusted for U.S. population growth yet —
-        that normalization is a planned next step.
-      </p>
+      <p class="chart-note">Raw report counts by year.</p>
+
+      <div id="chart-by-year" class="chart"></div>
 
       <div class="year-filter">
         <div class="year-filter-inputs">
@@ -59,8 +60,6 @@
         </div>
         <div id="year-slider" class="year-slider"></div>
       </div>
-
-      <div id="chart-by-year" class="chart"></div>
     </section>
 
   </main>
