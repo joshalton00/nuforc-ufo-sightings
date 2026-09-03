@@ -131,13 +131,16 @@ async function renderByYear() {
     hovertemplate: "%{x}: %{y} sightings<extra></extra>",
   };
 
+  const minYear = data.year[0];
+  const maxYear = data.year[data.year.length - 1];
+
   const layout = {
     ...BASE_LAYOUT,
     xaxis: {
       ...BASE_LAYOUT.xaxis,
       title: "Year",
       dtick: 10,
-      rangeslider: { visible: true, thickness: 0.08 },
+      range: [minYear - 0.5, maxYear + 0.5],
     },
     yaxis: { ...BASE_LAYOUT.yaxis, title: "Sightings" },
   };
@@ -163,6 +166,60 @@ async function renderByYear() {
     document.getElementById("generated-note").textContent =
       "Data last exported " + generated.toLocaleDateString(undefined, { dateStyle: "long" });
   }
+
+  setupYearFilter(minYear, maxYear);
+}
+
+// A Tableau-style dual-handle year filter: dragging either handle (or typing
+// directly into the start/end boxes) zooms the bar chart to that year range,
+// via Plotly.relayout rather than re-fetching or re-filtering the data --
+// the full dataset stays loaded, only the visible x-axis window changes.
+function setupYearFilter(minYear, maxYear) {
+  const sliderEl = document.getElementById("year-slider");
+  const startInput = document.getElementById("year-start-input");
+  const endInput = document.getElementById("year-end-input");
+
+  if (!sliderEl || typeof noUiSlider === "undefined") {
+    // noUiSlider failed to load (e.g. offline) -- the chart itself still
+    // works, it just won't have the interactive filter.
+    return;
+  }
+
+  noUiSlider.create(sliderEl, {
+    start: [minYear, maxYear],
+    connect: true,
+    range: { min: minYear, max: maxYear },
+    step: 1,
+    tooltips: false,
+  });
+
+  function applyRange(start, end) {
+    startInput.value = start;
+    endInput.value = end;
+    Plotly.relayout("chart-by-year", { "xaxis.range": [start - 0.5, end + 0.5] });
+  }
+
+  sliderEl.noUiSlider.on("update", (values) => {
+    applyRange(Math.round(values[0]), Math.round(values[1]));
+  });
+
+  // Typing a year directly and pressing Enter/tabbing away moves the slider
+  // (which in turn re-renders the chart via the "update" handler above).
+  function onInputCommit(which) {
+    return () => {
+      const current = sliderEl.noUiSlider.get().map(Number);
+      let start = which === "start" ? Number(startInput.value) : current[0];
+      let end = which === "end" ? Number(endInput.value) : current[1];
+      if (Number.isNaN(start) || Number.isNaN(end)) return;
+      start = Math.min(Math.max(start, minYear), maxYear);
+      end = Math.min(Math.max(end, minYear), maxYear);
+      if (start > end) [start, end] = [end, start];
+      sliderEl.noUiSlider.set([start, end]);
+    };
+  }
+
+  startInput.addEventListener("change", onInputCommit("start"));
+  endInput.addEventListener("change", onInputCommit("end"));
 }
 
 renderByDay();

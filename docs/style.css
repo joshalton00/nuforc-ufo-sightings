@@ -120,12 +120,6 @@ main.wrap {
   height: 420px;
 }
 
-/* Extra height for the year chart, to leave room for its range-slider strip
-   along the bottom without squeezing the bars themselves. */
-.chart--with-slider {
-  height: 500px;
-}
-
 /* Shown in place of a chart if its data file fails to load. */
 .chart-error {
   padding: 40px;
@@ -244,4 +238,81 @@ main.wrap {
   margin-top: 4px;
   font-size: 0.8rem;
   color: #9a9da3;
+}
+/* ---------------------------------------------------------------------
+   Year range filter (chart-by-year) -- a Tableau-style dual-handle slider
+   with editable start/end year boxes above it. The slider itself is
+   noUiSlider (loaded via CDN in index.html); these rules just restyle its
+   default look to match the rest of the page.
+   -------------------------------------------------------------------- */
+.year-filter {
+  margin-bottom: 28px;
+}
+
+.year-filter-inputs {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.year-filter-inputs label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: #5a5d63;
+  font-weight: 600;
+}
+
+.year-input {
+  width: 110px;
+  padding: 6px 10px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: #1c1e21;
+  border: 1px solid #c7c9cc;
+  border-radius: 4px;
+}
+
+.year-input:focus {
+  outline: none;
+  border-color: #2f5496;
+  box-shadow: 0 0 0 2px rgba(47, 84, 150, 0.15);
+}
+
+.year-slider {
+  margin: 0 8px 8px;
+}
+
+.year-slider.noUi-target {
+  background: #e2e2e4;
+  border: none;
+  box-shadow: none;
+  height: 4px;
+}
+
+.year-slider .noUi-connect {
+  background: #9a9da3;
+}
+
+.year-slider .noUi-handle {
+  width: 18px;
+  height: 18px;
+  right: -9px;
+  top: -8px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #5a5d63;
+  box-shadow: none;
+  cursor: grab;
+}
+
+.year-slider .noUi-handle:active {
+  cursor: grabbing;
+}
+
+.year-slider .noUi-handle::before,
+.year-slider .noUi-handle::after {
+  display: none;
 }
