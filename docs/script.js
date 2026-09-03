@@ -141,7 +141,6 @@ async function renderByYear() {
 
   const layout = {
     ...BASE_LAYOUT,
-    margin: { ...BASE_LAYOUT.margin, r: 180 },
     xaxis: {
       ...BASE_LAYOUT.xaxis,
       title: "Year",
@@ -154,18 +153,19 @@ async function renderByYear() {
   if (data.partial_year) {
     layout.annotations = [
       {
-        x: data.partial_year,
-        y: data.count[data.year.indexOf(data.partial_year)],
-        text: `${data.partial_year} is in progress —<br>not a full year yet`,
-        showarrow: true,
-        arrowhead: 2,
-        ax: 24,
-        ay: -40,
-        // Anchors the text box's LEFT edge to the arrow tip, so it grows
-        // rightward into the wider right margin above instead of being
-        // centered over the point (which is what pushed it past the
-        // chart's edge and got it clipped).
+        // "x domain"/"y domain" (rather than data coordinates) position
+        // this relative to the plot rectangle itself, so it stays put in
+        // the corner regardless of the year range currently zoomed to.
+        xref: "x domain",
+        yref: "y domain",
+        x: 0.02,
+        y: 0.03,
         xanchor: "left",
+        yanchor: "bottom",
+        text: `<i>${data.partial_year} is in progress — not a full year yet</i>`,
+        showarrow: false,
+        font: { size: 11, color: "#8a8d93" },
+        align: "left",
       },
     ];
   }
