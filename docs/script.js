@@ -78,16 +78,14 @@ async function renderByDay() {
   const trace = {
     x: dates,
     y: data.count,
-    type: "scatter",
-    mode: "lines",
-    fill: "tozeroy",
-    line: { color: "#3d7a68", width: 1.5 },
-    fillcolor: "rgba(61, 122, 104, 0.25)",
+    type: "bar",
+    marker: { color: "#3d7a68" },
     hovertemplate: "%{x|%b %d}: %{y} sightings<extra></extra>",
   };
 
   const layout = {
     ...BASE_LAYOUT,
+    bargap: 0,
     xaxis: { ...BASE_LAYOUT.xaxis, type: "date", tickformat: "%b", dtick: "M1" },
     yaxis: { ...BASE_LAYOUT.yaxis, title: "Sightings" },
     annotations: [
@@ -135,7 +133,12 @@ async function renderByYear() {
 
   const layout = {
     ...BASE_LAYOUT,
-    xaxis: { ...BASE_LAYOUT.xaxis, title: "Year", dtick: 10 },
+    xaxis: {
+      ...BASE_LAYOUT.xaxis,
+      title: "Year",
+      dtick: 10,
+      rangeslider: { visible: true, thickness: 0.08 },
+    },
     yaxis: { ...BASE_LAYOUT.yaxis, title: "Sightings" },
   };
 

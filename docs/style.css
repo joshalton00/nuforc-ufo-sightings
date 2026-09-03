@@ -120,6 +120,12 @@ main.wrap {
   height: 420px;
 }
 
+/* Extra height for the year chart, to leave room for its range-slider strip
+   along the bottom without squeezing the bars themselves. */
+.chart--with-slider {
+  height: 500px;
+}
+
 /* Shown in place of a chart if its data file fails to load. */
 .chart-error {
   padding: 40px;
