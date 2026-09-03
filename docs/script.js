@@ -11,6 +11,11 @@ const BASE_LAYOUT = {
   font: { family: "-apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif", color: "#1c1e21" },
   xaxis: { gridcolor: "#eee" },
   yaxis: { gridcolor: "#eee", zeroline: false, tickformat: ",d" },
+  hoverlabel: {
+    bgcolor: "#3a3d42",
+    bordercolor: "#3a3d42",
+    font: { color: "#fff" },
+  },
 };
 
 const BASE_CONFIG = {
@@ -136,6 +141,7 @@ async function renderByYear() {
 
   const layout = {
     ...BASE_LAYOUT,
+    margin: { ...BASE_LAYOUT.margin, r: 180 },
     xaxis: {
       ...BASE_LAYOUT.xaxis,
       title: "Year",
@@ -153,8 +159,13 @@ async function renderByYear() {
         text: `${data.partial_year} is in progress —<br>not a full year yet`,
         showarrow: true,
         arrowhead: 2,
-        ax: 40,
+        ax: 24,
         ay: -40,
+        // Anchors the text box's LEFT edge to the arrow tip, so it grows
+        // rightward into the wider right margin above instead of being
+        // centered over the point (which is what pushed it past the
+        // chart's edge and got it clipped).
+        xanchor: "left",
       },
     ];
   }
