@@ -180,6 +180,32 @@
           arrived clean.
         </p>
       </div>
+
+      <div class="challenge">
+        <h3>Two chart controls that needed to work together, but couldn't talk to each other</h3>
+        <p>
+          <strong>Problem:</strong> the state map needed a year selector and
+          a total/per-capita toggle to combine — "2010, per capita" — but
+          Plotly's menu controls only support static, precomputed actions
+          per button, with no built-in way for one menu's button to know
+          what the other menu currently has selected.
+        </p>
+        <p>
+          <strong>What I did:</strong> switched both menus to Plotly's
+          "skip" method, which lets a button highlight itself as the
+          current selection without triggering any built-in update, then
+          wired up a single click listener that tracks the current year and
+          measure together and redraws the map from both, every time either
+          one changes.
+        </p>
+        <p>
+          <strong>Why it matters:</strong> off-the-shelf charting libraries
+          cover the common cases well, but a real dashboard eventually asks
+          for something the library wasn't built for. Knowing how to step
+          outside a library's built-in controls without throwing them away
+          entirely is a normal part of the job, not an edge case.
+        </p>
+      </div>
     </section>
 
     <section class="limitations">
@@ -192,10 +218,11 @@
           versioning helper for this exists but isn't wired in yet.
         </li>
         <li>
-          This dashboard is Phase 1 of the plan — it doesn't yet include
-          per-capita normalization or the geographic maps from my original
-          Tableau version of this project, since those need population and
-          space-launch data I'm still re-sourcing.
+          The hex-cartogram map and the sightings-vs-space-launches
+          comparison from my original Tableau version aren't built yet —
+          the hex map needs a hand-built hex-grid layout, since Plotly has
+          no built-in support for that chart type, and the space-launch
+          comparison needs data I'm still re-sourcing.
         </li>
       </ul>
     </section>

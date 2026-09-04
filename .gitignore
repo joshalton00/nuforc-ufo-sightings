@@ -1,6 +1,11 @@
 # Cloudflare-clearance / Chrome profile data written by scrape_nuforc.py -- not something to commit
 chrome_profile/
 
+# Raw Census source files downloaded by debug_dump_sources.py / debug_dump_state_sources.py for
+# inspection while building the population parsers -- easy to re-download, not something to commit
+population_debug/
+population_debug_state/
+
 # Python bytecode cache
 __pycache__/
 

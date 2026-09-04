@@ -55,7 +55,8 @@ a {
 }
 
 .site-nav a {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   padding: 12px 0;
   color: #dbe4f3;
   text-decoration: none;
@@ -63,8 +64,31 @@ a {
   border-bottom: 3px solid transparent;
 }
 
+/* A small easter-egg icon that slides in next to a nav tab on hover -- hidden and
+   shifted left at rest, faded/slid into place on hover. Width is set explicitly (not
+   just image width) so it can be animated from 0, which also drives the label's own
+   slight rightward shift as the icon makes room for itself. */
+.site-nav a::after {
+  content: "";
+  width: 0;
+  height: 18px;
+  margin-left: 0;
+  background-image: url("nav-alien-icon.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: left center;
+  opacity: 0;
+  transition: width 0.15s ease, opacity 0.15s ease, margin-left 0.15s ease;
+}
+
 .site-nav a:hover {
   color: #fff;
+}
+
+.site-nav a:hover::after {
+  width: 18px;
+  margin-left: 8px;
+  opacity: 1;
 }
 
 .site-nav a.active {
@@ -99,6 +123,13 @@ main.wrap {
   font-size: 1.3rem;
 }
 
+/* Centered for the dashboard's chart titles specifically -- .card (the case-study
+   page's content cards) keeps its heading left-aligned, since that page reads more
+   like a document than a set of chart cards. */
+.chart-card h2 {
+  text-align: center;
+}
+
 .card p {
   margin: 0 0 12px;
 }
@@ -118,6 +149,12 @@ main.wrap {
   /* Plotly sizes itself to fill this box (see script.js) -- the height is
      set here rather than in JS so the layout doesn't jump while it loads. */
   height: 420px;
+}
+
+/* A US choropleth reads better a bit taller than the other charts -- more
+   room for the map's own aspect ratio plus the year dropdown above it. */
+.chart-map {
+  height: 520px;
 }
 
 /* Shown in place of a chart if its data file fails to load. */
